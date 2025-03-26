@@ -44,9 +44,9 @@ def index() -> rx.Component:
         # Controles de paginación
         rx.hstack(
             rx.button("Anterior", on_click=SubnetState.prev_page),
-            rx.text(lambda: f"Página {SubnetState.page} de {((len(SubnetState.subredes_data)-1)//SubnetState.page_size)+1}"),
+            rx.text(f"Página {SubnetState.page} de {((SubnetState.subredes_data.length()-1)//SubnetState.page_size)+1}"),
             rx.button("Siguiente", on_click=SubnetState.next_page),
-            spacing="10",
+            spacing="4",
         ),
         align="center",
         justify="center",

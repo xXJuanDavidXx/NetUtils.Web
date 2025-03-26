@@ -2,6 +2,8 @@ import reflex as rx
 import ipaddress
 from dataclasses import field
 from Subnettingpy.Conversor_binario import ConversorBinario as CB
+from typing import List, Dict
+
 
 cbin = CB()
 
@@ -16,11 +18,17 @@ class Sunetting(rx.State):
     """Recibe una red con con su CIDR por defecto identificador de la red y recibe el nuevo CIDR con el que se va a recibir la red."""
     ip: str = ""
     cidr: str = ""
-    subredes_data: list[dict] = []
+    subredes_data: List[Dict[str, str]] = []
     page: int = 1         # Página actual
     page_size: int = 10   # Registros por página
 
-# Primero la función que calcula las subredes
+    @rx.var
+    def get_paginated_data(self) -> List[Dict[str, str]]:
+        """Devuelve los datos de la página actual."""
+        start = (self.page - 1) * self.page_size
+        end = start + self.page_size
+        return self.subredes_data[start:end]
+
     def calcular_subredes(self):
         """Calcula las subredes y actualiza la lista de datos."""
         try:
@@ -78,12 +86,6 @@ class Sunetting(rx.State):
             })
         self.subredes_data = data
         self.page = 1  # Reinicia a la primera página
-
-    def get_paginated_data(self) -> list:
-        """Devuelve los datos de la página actual."""
-        start = (self.page - 1) * self.page_size
-        end = start + self.page_size
-        return self.subredes_data[start:end]
 
     def next_page(self):
         """Avanza a la siguiente página si es posible."""
